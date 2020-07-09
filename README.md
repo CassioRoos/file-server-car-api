@@ -7,13 +7,17 @@ Note: need to use `--data-binary` to ensure file is not converted to text
 
 ## POST
 ```
-curl -vvv localhost:9090/images/1/car.png -X POST --data-binary @car.png
+curl -vvv localhost:3333/images/1/car.png -X POST --data-binary @car.png
 ```
 
 ## GET
 
 ```
-curl -vvv localhost:9090/images/1/car.png --output car2.png 
+curl -vvv localhost:3333/images/1/car.png --output car2.png 
+```
+**Now support __--compressed__ as well**
+```
+curl -vvv localhost:3333/images/1/car.png --compressed --output car3.png 
 ```
 
 ## POST Multi-Part

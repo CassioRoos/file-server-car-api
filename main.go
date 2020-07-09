@@ -4,14 +4,14 @@ import (
 	"car-images-api/files"
 	"car-images-api/handlers"
 	"context"
-	"net/http"
-	"os"
-	"os/signal"
-	"time"
 	gorillaHandlers "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	hclog "github.com/hashicorp/go-hclog"
 	"github.com/nicholasjackson/env"
+	"net/http"
+	"os"
+	"os/signal"
+	"time"
 )
 
 var bindAddress = env.String("BIND_ADDRESS", false, ":3333", "Bind address for the server")
@@ -64,10 +64,14 @@ func main() {
 		http.StripPrefix("/images/", http.FileServer(http.Dir(*basePath))),
 	)
 
+	// Gzip middleware to get compressed images from the repo
+	gzipmidleware := handlers.GzipMiddleware{}
+	gh.Use(gzipmidleware.GzipMiddleWare)
+
 	// create a new server
 	s := http.Server{
 		Addr:         *bindAddress,      // configure the bind address
-		Handler:      ch(sm),                // set the default handler
+		Handler:      ch(sm),            // set the default handler
 		ErrorLog:     sl,                // the logger for the server
 		ReadTimeout:  5 * time.Second,   // max time to read request from the client
 		WriteTimeout: 10 * time.Second,  // max time to write response to the client
